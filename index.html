@@ -1,1 +1,352 @@
-Hello world
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      .map {
+        height: 500px;
+	width: 750px;
+      }
+      h2 {
+	margin: 1em, 0;
+
+   
+	}
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 2em;
+        padding: 0;
+        font-family: 'Roboto';
+      }
+	.note {
+		color: #888;
+		font-size: 0.8rem;
+	}
+ 	.footer {
+		height: 64px;
+	}
+      .legend {
+	width: 750px;
+      }
+       tr {
+            background-color: white;
+            padding: 4px;
+        }
+        tr:nth-child(even) {
+            background-color: #ddd;
+        }
+        td {
+            padding: 8px;
+        }
+        td:nth-child(odd) {
+            text-align: right;
+        }
+        th {
+            text-align: left;
+            padding: 8px;
+        }
+
+    </style>
+
+    <script src="schoolsscored.js"></script>
+    <script src="both.js"></script>
+    <script src="both1.js"></script>
+    <script src="both2.js"></script>
+    <script src="both3.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+  
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+  </head>
+  <body>
+    <h1> Accidents Near Schools </h1>
+    <p class="legend"> Visualized Helsinki City school building data and traffic accidents. Short look on how many accidents happen near schools. Which school areas are the safest and the least safe? </p>
+    <p class="note">Note: Single markers may take a moment to load, so please be patient. </p>
+    <h2> Cyclists and pedestrians heatmap </h2>
+    <div id="all-heatmap" class="map"></div>
+    <p class="legend"> Here traffic accidents are visualized as a heatmap and schools as blue dots. Accidents happen mostly where people move such as the city center, major roads and intersections. School buildings are scattered all around the city - especially in areas where people live. Some outlier cases can be found on the islands, where there are hardly any traffic and only few schools. </p>
+    <h2> Material Damage </h2>
+    <div id="material-map" class="map"></div>
+    <p class="legend"> Accidents involving pedestrians and cyclists with only property damage.
+ </p>
+    <h2> Accidents </h2>
+    <div id="accidents-map" class="map"></div>
+    <p class="legend"> Accidents involving pedestrians and cyclists with injury. Just from the visualization we can see that injuries are more common than property damage when a cyclist or a pedestrian is involved in an accident. </p>
+    <h2> Deaths </h2>
+    <div id="deaths-map" class="map"></div>
+    <p class="legend"> Deaths involving pedestrians and cyclists are luckily far and few between. </p>
+    <h2> Schools ranked by nearby accidents </h2>
+	<p>The score is a weighted sum of accidents. Property damage = 1, injury = 4, death = 16 </p>	
+	<table>
+	    <tr>
+		<th>Rank</th>
+		<th>Name of the School</th>
+		<th>Score</th>
+	    </tr>
+	    <tr>
+		<td>1</td>
+		<td>Helsingin Saksalainen koulu</td>
+		<td>143</td>
+	    </tr>
+	    <tr>
+		<td>2</td>
+		<td>Töölön ala-asteen koulu</td>
+		<td>98</td>
+	    </tr>
+	    <tr>
+		<td>3</td>
+		<td>Juutalainen koulu</td>
+		<td>92</td>
+	    </tr>
+	    <tr>
+		<td>4</td>
+		<td>Myynti- ja mainoskoulu</td>
+		<td>90</td>
+	    </tr>
+	    <tr>
+		<td>5</td>
+		<td>Helsingin kuvataidelukio</td>
+		<td>87</td>
+	    </tr>
+	    <tr>
+		<td>6</td>
+		<td>Helsingin yhteiskoulun valmistava koulu</td>
+		<td>79</td>
+	    </tr>
+	    <tr>
+		<td>7</td>
+		<td>Vallilan ala-asteen koulu</td>
+		<td>74</td>
+	    </tr>
+	    <tr>
+		<td>8</td>
+		<td>Svenska Handelsinstitutet i Helsingfors</td>
+		<td>73</td>
+	    </tr>
+	    <tr>
+		<td>9</td>
+		<td>Aleksis Kiven peruskoulu</td>
+		<td>67</td>
+	    </tr>
+	    <tr>
+		<td>10</td>
+		<td>The English School</td>
+		<td>67</td>
+	    </tr>
+	    <tr>
+		<td>11</td>
+		<td>Itäkeskuksen peruskoulu</td>
+		<td>64</td>
+	    </tr>
+	    <tr>
+		<td>12</td>
+		<td>Helsingin aikuislukio</td>
+		<td>64</td>
+	    </tr>
+	    <tr>
+		<td>13</td>
+		<td>Yrkesskola för snickeri- och träslöjd</td>
+		<td>62</td>
+	    </tr>
+	    <tr>
+		<td>14</td>
+		<td>Ison Roobertinkadun kansakoulu</td>
+		<td>61</td>
+	    </tr>
+	    <tr>
+		<td>15</td>
+		<td>Cygnaeus lågstadieskola</td>
+		<td>58</td>
+	    </tr>
+	<table>
+    <h2> Heatmap of Danger Scores </h2>
+    <div id="weighted-heatmap" class="map"></div>
+    <p class="legend"> Ranked school buildings visualized on map. The higher the score, the darker the dot on the map. As expected most dangerous areas appear in the city center with the lone exception of Itäkeskuksen peruskoulu. Comparing this map to earlier maps, we see that many schools are hardly even visible. This is because so many schools have not had any accidents near them. </p>
+    
+    <div class="footer"> </div>
+    <script>
+      var map;
+      var map1;
+      var map2;
+      var map3;
+      var map4;
+      function initMap() { 
+	// HEATMAP
+	var heatmapdata = Object.keys(bothdata.ita_etrs).map(i => {
+	  return new google.maps.LatLng(bothdata.pohj_etrs[i], bothdata.ita_etrs[i])
+	})
+ 
+	var points = Object.keys(scoredata.currentLocation).map(index => {
+		// get lat lng and score here	  
+		const p = scoredata.currentLocation[index]
+		const s = scoredata.score_jk[index]
+		return { lat: p[1], lng: p[0], score: s }
+	})
+	var hhp = points.map(p => {
+		var ret = []
+		ret.push(new google.maps.LatLng(p.lat, p.lng))
+		for (var i = 1; i < p.score; ++i) {
+			ret.push(new google.maps.LatLng(p.lat, p.lng))
+		} 
+		return ret
+	})
+	var weightedheatmapdata = [].concat.apply([], hhp);
+	
+
+	// MATERIAL DAMAGE (1)
+	const both1set = both1data
+	const both1indexes = Object.keys(both1set.ita_etrs)
+	var materialDamage = both1indexes.map( index => {
+		const latitude = both1set.pohj_etrs[index]
+		const longitude = both1set.ita_etrs[index]
+		const point = { lat: latitude, lng: longitude }
+		const severity = both1set.VAKAV_A[index]
+		const mark = { point: point, type: severity }
+		return mark
+	})
+
+	// ACCIDENTS (2)
+	const both2set = both2data
+	const both2indexes = Object.keys(both2set.ita_etrs)
+	var accidents = both2indexes.map( index => {
+		const latitude = both2set.pohj_etrs[index]
+		const longitude = both2set.ita_etrs[index]
+		const point = { lat: latitude, lng: longitude }
+		const severity = both2set.VAKAV_A[index]
+		const mark = { point: point, type: severity }
+		return mark
+	})
+
+	// DEATHS (3)
+	const both3set = both3data
+	const both3indexes = Object.keys(both3set.ita_etrs)
+	var deaths = both3indexes.map( index => {
+		const latitude = both3set.pohj_etrs[index]
+		const longitude = both3set.ita_etrs[index]
+		const point = { lat: latitude, lng: longitude }
+		const severity = both3set.VAKAV_A[index]
+		const mark = { point: point, type: severity }
+		return mark
+	})
+
+       var gradient = [
+          'rgba(0, 255, 255, 0)',
+          'rgba(0, 255, 255, 1)',
+          'rgba(0, 191, 255, 1)',
+          'rgba(0, 127, 255, 1)',
+          'rgba(0, 63, 255, 1)',
+          'rgba(0, 0, 255, 1)',
+          'rgba(0, 0, 223, 1)',
+          'rgba(0, 0, 191, 1)',
+          'rgba(0, 0, 159, 1)',
+          'rgba(0, 0, 127, 1)',
+          'rgba(63, 0, 91, 1)',
+          'rgba(127, 0, 63, 1)',
+          'rgba(191, 0, 31, 1)',
+          'rgba(255, 0, 0, 1)'
+        ]
+
+
+	// NORMAL MAP
+        map = new google.maps.Map(document.getElementById('all-heatmap'), {
+          center: {lat: 60.171686, lng: 24.944646},
+          zoom: 11
+        });
+
+	// ADD HEATMAP
+	heatmap = new google.maps.visualization.HeatmapLayer({
+	 	data: heatmapdata,
+	  	map: map
+	});
+
+	// MATERIAL DAMAGE MAP
+        map1 = new google.maps.Map(document.getElementById('material-map'), {
+          center: {lat: 60.171686, lng: 24.944646},
+          zoom: 11
+        });
+
+	// ACCIDENTS MAP
+        map2 = new google.maps.Map(document.getElementById('accidents-map'), {
+          center: {lat: 60.171686, lng: 24.944646},
+          zoom: 11
+        });
+
+	// DEATHS MAP
+        map3 = new google.maps.Map(document.getElementById('deaths-map'), {
+          center: {lat: 60.171686, lng: 24.944646},
+          zoom: 11
+        });
+
+	// NORMAL MAP
+        map4 = new google.maps.Map(document.getElementById('weighted-heatmap'), {
+          center: {lat: 60.171686, lng: 24.944646},
+          zoom: 11,
+        });
+
+	// WEIGHTED HEATMAP
+	weightedheatmap = new google.maps.visualization.HeatmapLayer({
+	 	data: weightedheatmapdata,
+	  	map: map4,
+		gradient: gradient
+	});
+	
+	var schoolIcon = {
+	    path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+	    fillColor: '#0000FF',
+	    fillOpacity: .6,
+	    anchor: new google.maps.Point(0,0),
+	    strokeWeight: 0,
+	    scale: 0.3
+	}
+	function getAccidentIcon(severity) {
+		var severColor = '#ffff00'		
+		if (severity === 2) {
+			severColor = '#ffa500'
+		}
+		if (severity === 3) {
+			severColor = '#FF0000'
+		}
+
+		return {
+		    path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
+		    fillColor: severColor,
+		    fillOpacity: 1,
+		    anchor: new google.maps.Point(0,0),
+		    strokeWeight: 0,
+		    scale: 0.2
+		}
+	}
+
+
+
+	points.forEach(p => {
+	  new google.maps.Marker({position: p, map: map, icon: schoolIcon})
+	  new google.maps.Marker({position: p, map: map1, icon: schoolIcon})
+	  new google.maps.Marker({position: p, map: map2, icon: schoolIcon})
+	  new google.maps.Marker({position: p, map: map3, icon: schoolIcon})
+	})
+
+
+	materialDamage.forEach(m => {
+	  new google.maps.Marker({position: m.point, map: map1, icon: getAccidentIcon(m.type) })
+	})
+
+	accidents.forEach(m => {
+	  new google.maps.Marker({position: m.point, map: map2, icon: getAccidentIcon(m.type) })
+	})
+
+	deaths.forEach(m => {
+	  new google.maps.Marker({position: m.point, map: map3, icon: getAccidentIcon(m.type) })
+	})
+
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBc1pVjXcNmNZkcbGXJSOE79W6OaJShAao&libraries=visualization&callback=initMap"
+    async defer></script>
+  </body>
+</html>
